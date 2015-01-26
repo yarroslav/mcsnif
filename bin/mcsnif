@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__),'..','lib')
+
+require 'rubygems'
+require 'cmdline'
+require 'sniffer'
+
+@config = CmdLine.parse(ARGV)
+
+# instantiate a sniffer and user interface object
+sniffer = MemcacheSniffer.new(@config)
+
+# trap most of the typical signals
+%w[ INT QUIT HUP KILL ].each do |sig|
+  Signal.trap(sig) do
+    puts "** Caught signal #{sig} - exiting"
+    exit(0)
+  end
+end
+
+sniffer.start
+
+## cleanup
+sniffer.done
+
+## if sniffer thread doesn't join immediately kill it off the
+## capture.each loop blocks if no packets have been seen
+if sniff_thread.join(0)
+  sniff_thread.kill
+end
