@@ -36,7 +36,7 @@ class MemcacheSniffer
 
     cap.loop do |packet|
 
-	if ((packet.raw_data =~ /set (\S+) \d+ \d+ (\d+)/) || (packet.raw_data =~ /delete (\S+)/))
+	if ((packet.raw_data =~ /set (\S+) \d+ \d+ (\d+)/) || (packet.raw_data =~ /delete (\S+)(.?)/))
 		key   = $1
 		if not self.isHint(key) 
 			if self.filter(key)
